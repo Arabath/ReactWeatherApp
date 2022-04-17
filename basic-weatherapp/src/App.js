@@ -6,13 +6,13 @@ function App() {
  return (
    <div className="App">
      <header className="App-header">
-       <h1>React Weather App</h1>
+       <h1>Basic Weather App</h1>
      </header>
      <main>
        <Forecast />
      </main>
      <footer>
-       Page created by Arabath
+       Page created by Arabath©
      </footer>
    </div>
  );
