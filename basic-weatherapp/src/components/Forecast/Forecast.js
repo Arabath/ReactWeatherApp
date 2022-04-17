@@ -1,56 +1,32 @@
 import React, { useState } from "react";
 import Conditions from "../Conditions/Conditions";
-import classes from "./Forecast.module.css";
+import classes from './Forecast.module.css';
+
 
 const Forecast = () => {
   let [city, setCity] = useState("");
   let [unit, setUnit] = useState("imperial");
   let [responseObj, setResponseObj] = useState({});
-  let [error, setError] = useState(false);
-  let [loading, setLoading] = useState(false);
   const uriEncodedCity = encodeURIComponent(city);
-
   function getForecast(e) {
-    e.preventDefault();
-
-    if (city.length === 0) {
-      return setError(true);
-    }
-
-    // Clear state in preparation for new data
-    setError(false);
-    setResponseObj({});
-
-    setLoading(true);
-
-    let uriEncodedCity = encodeURIComponent(city);
+    e.preventDefault();  
+    const options = {
+      method: "GET",
+      headers: {
+        "X-RapidAPI-Host": "community-open-weather-map.p.rapidapi.com",
+        "X-RapidAPI-Key": "0b70c7a579msh242db71b8cbca31p1a45cdjsn264d0e1bce97",
+      },
+    };
 
     fetch(
       `https://community-open-weather-map.p.rapidapi.com/weather?units=${unit}&q=${uriEncodedCity}`,
-      {
-        method: "GET",
-        headers: {
-          "x-rapidapi-host": "community-open-weather-map.p.rapidapi.com",
-          "x-rapidapi-key": process.env.REACT_APP_API_KEY,
-        },
-      }
+      options
     )
       .then((response) => response.json())
       .then((response) => {
-        if (response.cod !== 200) {
-          throw new Error();
-        }
-
         setResponseObj(response);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(true);
-        setLoading(false);
-        console.log(err.message);
       });
   }
-
   return (
     <div>
       <h2>Find Current Weather Conditions</h2>
@@ -83,11 +59,9 @@ const Forecast = () => {
           />
           Celcius
         </label>
-        <button className={classes.Button} type="submit">
-          Get Forecast
-        </button>
+        <button className={classes.Button} type="submit">Get Forecast</button>
       </form>
-      <Conditions responseObj={responseObj} error={error} loading={loading} />
+      <Conditions responseObj={responseObj} />
     </div>
   );
 };
